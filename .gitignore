@@ -1,6 +1,6 @@
 *.o
 .*.swp
-/.deps/
+/.deps
 /INSTALL
 /Makefile
 /Makefile.in
