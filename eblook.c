@@ -329,11 +329,11 @@ struct command_table_t {
 };
 
 struct command_table_t *find_command ();
-#ifdef USE_DROMOZOA
+#ifndef USE_DROMOZOA
+struct command_table_t command_table[] = {
+#else
 struct command_table_t* command_table = 0;
 struct command_table_t command_table_source[] = {
-#else
-struct command_table_t command_table[] = {
 #endif
   {"book", "[directory [appendix]]", command_book, "Set a book directory.\n"},
   {"info", "", command_info, "Show information of the selected book.\n"},
