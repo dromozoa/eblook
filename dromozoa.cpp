@@ -7,7 +7,6 @@
 #include <png.h>
 
 #include <cstddef>
-#include <cstdint>
 #include <cstdio>
 #include <iostream>
 #include <memory>
@@ -120,7 +119,7 @@ namespace {
           PNG_FILTER_TYPE_DEFAULT);
 
       std::vector<png_byte> buffer(width * height / 8);
-      ssize_t buffer_size;
+      ssize_t buffer_size = 0;
       check(eb_read_rawtext(&current_book, buffer.size(), reinterpret_cast<char*>(buffer.data()), &buffer_size));
 
       std::vector<png_bytep> rows(height);
