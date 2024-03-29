@@ -329,7 +329,12 @@ struct command_table_t {
 };
 
 struct command_table_t *find_command ();
+#ifdef USE_DROMOZOA
+struct command_table_t* command_table = 0;
+struct command_table_t command_table_source[] = {
+#else
 struct command_table_t command_table[] = {
+#endif
   {"book", "[directory [appendix]]", command_book, "Set a book directory.\n"},
   {"info", "", command_info, "Show information of the selected book.\n"},
   {"list", "", command_list, "List all dictionaries in the selected book.\n"},
@@ -369,9 +374,6 @@ struct command_table_t command_table[] = {
 #endif
 #ifdef EB_HOOK_BEGIN_COLOR_CHART
   {"color", "number", command_color, "show color chart information.\n"},
-#endif
-#ifdef USE_DROMOZOA
-  {"png", "entry width height", command_png, "dump mono image in png.\n"},
 #endif
   {NULL, NULL, NULL, NULL}
 };
@@ -511,6 +513,10 @@ main (argc, argv)
 
 #ifdef USE_READLINE
   char *histfile = NULL;
+#endif
+
+#ifdef USE_DROMOZOA
+  command_table = dromozoa_command_table(command_table_source);
 #endif
 
   invoked_name = argv[0];
