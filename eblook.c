@@ -44,6 +44,7 @@
 
 #include "getopt.h"
 #include "codeconv.h"
+#include "extension.h"
 
 #ifdef EBCONF_ENABLE_PTHREAD
 #define ENABLE_PTHREAD
@@ -341,6 +342,7 @@ struct command_table_t command_table[] = {
   {"dump", "entry [offset]", command_dump, "Display dumps of entry.\n"},
   {"pbm", "entry width height", command_pbm, "dump mono image in pbm.\n"},
   {"xbm", "entry width height", command_xbm, "dump mono image in xbm.\n"},
+  {"png", "entry width height", command_png, "dump mono image in png.\n"},
   {"bmp", "entry file", command_bmp, "dump bmp image into file.\n"},
   {"bmp2ppm", "entry file", command_bmp2ppm, "dump bmp image into file in PPM format.\n"},
   {"bmp2tiff", "entry file", command_bmp2tiff, "dump bmp image into file in TIFF format.\n"},

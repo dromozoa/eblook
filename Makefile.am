@@ -4,7 +4,7 @@ bin_PROGRAMS = eblook
 info_TEXINFOS = eblook.texi
 
 eblook_SOURCES = eblook.c codeconv.c getopt.c getopt1.c bmp2ppm.c bmp_in.c \
-	win32.c
+	win32.c extension.cpp
 eblook_LDADD = @LIBOBJS@
 noinst_HEADERS = getopt.h codeconv.h
 
