@@ -14,9 +14,6 @@ AC_PROG_INSTALL
 AC_PROG_LIBTOOL
 AC_PROG_LN_S
 
-AC_PROG_CXX
-AX_CXX_COMPILE_STDCXX(11, noext)
-
 dnl Checks for libraries.
 
 dnl Checks for header files.
@@ -102,6 +99,17 @@ CPPFLAGS="$CPPFLAGS $EBCONF_PTHREAD_CPPFLAGS $EBCONF_EBINCS $EBCONF_ZLIBINCS $IC
 CFLAGS="$CFLAGS $EBCONF_PTHREAD_CFLAGS"
 LDFLAGS="$LDFAGS $EBCONF_PTHREAD_LDFLAGS"
 LIBS="$LIBS $EBCONF_EBLIBS $ICONVLIBS $EBCONF_ZLIBLIBS $EBCONF_INTLLIBS"
+
+AC_ARG_ENABLE([dromozoa],
+  [AS_HELP_STRING([--enable-dromozoa],[use dromozoa extension [default=yes]])],
+  [use_dromozoa=$enableval],
+  [use_dromozoa=yes])
+AS_IF([test "X$use_dromozoa" = Xyes],
+  [AC_DEFINE([USE_DROMOZOA], 1, [Define to 1 if using dromozoa extension.])])
+AM_CONDITIONAL([USE_DROMOZOA], [test "X$use_dromozoa" = Xyes])
+
+AC_PROG_CXX
+AX_CXX_COMPILE_STDCXX(11, noext)
 
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

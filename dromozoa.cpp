@@ -1,5 +1,5 @@
 extern "C" {
-#include "extension.h"
+#include "dromozoa.h"
 }
 
 #include <iostream>
