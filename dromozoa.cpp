@@ -37,6 +37,56 @@ namespace {
     }
   }
 
+  class png_writer_t {
+  public:
+    png_writer_t(const png_writer_t&) = delete;
+    png_writer_t& operator=(const png_writer_t&) = delete;
+
+    explicit png_writer_t(const char* path) : handle_(std::fopen(path, "wb"), std::fclose), png_(), info_() {
+      try {
+        if (!handle_) {
+          handle_error(nullptr, "cannot fopen");
+        }
+
+        png_ = png_create_write_struct(PNG_LIBPNG_VER_STRING, nullptr, handle_error, nullptr);
+        if (!png_) {
+          handle_error(nullptr, "cannot png_create_write_struct");
+        }
+
+        info_ = png_create_info_struct(png_);
+        if (!info_) {
+          png_error(png_, "cannot png_create_info_struct");
+        }
+
+        png_init_io(png_, handle_.get());
+      } catch (...) {
+        png_destroy_write_struct(&png_, &info_);
+        throw;
+      }
+    }
+
+    png_structp png() {
+      return png_;
+    }
+
+    png_infop info() {
+      return info_;
+    }
+
+    ~png_writer_t() {
+      png_destroy_write_struct(&png_, &info_);
+    }
+
+  private:
+    std::unique_ptr<std::FILE, decltype(&std::fclose)> handle_;
+    png_structp png_;
+    png_infop info_;
+
+    static void handle_error(png_structp, const char* message) {
+      throw std::runtime_error(message);
+    }
+  };
+
   // entry w h file
   void command_png(int argc, char* argv[]) {
     try {
@@ -50,19 +100,35 @@ namespace {
       }
       check(eb_seek_text(&current_book, &position));
 
-      int w = std::stoi(argv[2]);
-      if (w <= 0) {
+      int width = std::stoi(argv[2]);
+      if (width <= 0 || width % 8 != 0) {
         throw std::invalid_argument("invalid width");
       }
-      int h = std::stoi(argv[3]);
-      if (h <= 0) {
+      int height = std::stoi(argv[3]);
+      if (height <= 0) {
         throw std::invalid_argument("invalid height");
       }
 
-      std::unique_ptr<std::FILE, decltype(&std::fclose)> handle(std::fopen(argv[4], "wb"), std::fclose);
-      std::vector<std::uint8_t> buffer((w * h + 7) / 8);
+      png_writer_t png_writer(argv[4]);
+      png_set_IHDR(png_writer.png(), png_writer.info(),
+          width,
+          height,
+          1,
+          PNG_COLOR_TYPE_GRAY,
+          PNG_INTERLACE_NONE,
+          PNG_COMPRESSION_TYPE_DEFAULT,
+          PNG_FILTER_TYPE_DEFAULT);
+
+      std::vector<png_byte> buffer(width * height / 8);
       ssize_t buffer_size;
       check(eb_read_rawtext(&current_book, buffer.size(), reinterpret_cast<char*>(buffer.data()), &buffer_size));
+
+      std::vector<png_bytep> rows(height);
+      for (int i = 0; i < height; ++i) {
+        rows[i] = &buffer[width * i / 8];
+      }
+      png_set_rows(png_writer.png(), png_writer.info(), rows.data());
+      png_write_png(png_writer.png(), png_writer.info(), PNG_TRANSFORM_IDENTITY, nullptr);
 
     } catch (const std::exception& e) {
       std::cerr << e.what() << "\n";
