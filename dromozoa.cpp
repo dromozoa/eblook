@@ -4,6 +4,8 @@
 #include <ebu/error.h>
 #include <ebu/text.h>
 
+#include <png.h>
+
 #include <cstddef>
 #include <cstdint>
 #include <cstdio>
