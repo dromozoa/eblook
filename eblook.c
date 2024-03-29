@@ -488,10 +488,17 @@ EB_Hook heading_hooks[] = {
   {EB_HOOK_NULL, NULL},
 };
 
+#ifndef USE_DROMOZOA
 static const char *short_options = "e:hqiv";
+#else
+static const char *short_options = "e:hp:qiv";
+#endif
 static struct option long_options[] = {
   {"encoding",        required_argument, NULL, 'e'},
   {"help",            no_argument,       NULL, 'h'},
+#ifdef USE_DROMOZOA
+  {"prompt",          required_argument, NULL, 'p'},
+#endif
   {"no-init-file",    no_argument,       NULL, 'q'},
   {"non-interactive", no_argument,       NULL, 'i'},
   {"version",         no_argument,       NULL, 'v'},
@@ -550,6 +557,11 @@ main (argc, argv)
     case 'i':
       interactive_mode = 0;
       break;
+#ifdef USE_DROMOZOA
+    case 'p':
+      default_prompt = optarg;
+      break;
+#endif
     default:
       show_try_help ();
       exit (1);
