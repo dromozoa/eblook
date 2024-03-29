@@ -1,9 +1,16 @@
 .*.swp
+/.deps/
+/Makefile
 /Makefile.in
 /aclocal.m4
 /autom4te.cache
+/config.h
 /config.h.in
+/config.log
+/config.status
 /configure
+/libtool
 /ltmain.sh
 /m4/libtool.m4
 /m4/ltversion.m4
+/stamp-h1
