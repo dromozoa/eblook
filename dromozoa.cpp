@@ -128,7 +128,7 @@ namespace {
         rows[i] = &buffer[width * i / 8];
       }
       png_set_rows(png_writer.png(), png_writer.info(), rows.data());
-      png_write_png(png_writer.png(), png_writer.info(), PNG_TRANSFORM_IDENTITY, nullptr);
+      png_write_png(png_writer.png(), png_writer.info(), PNG_TRANSFORM_INVERT_MONO, nullptr);
 
     } catch (const std::exception& e) {
       std::cerr << e.what() << "\n";
