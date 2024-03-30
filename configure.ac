@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.63)
-AC_INIT(eblook, 1.6.1+media-20220426)
+AC_INIT(eblook, 1.6.1+media-20220426.dp1)
 AC_CONFIG_SRCDIR([eblook.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CANONICAL_TARGET

@@ -285,6 +285,10 @@ const char *features[] = {
   "READLINE",
 #define HAVE_ANY_FEATURE 1
 #endif
+#ifdef USE_DROMOZOA
+  "DROMOZOA",
+#define HAVE_ANY_FEATURE 1
+#endif
   NULL
 };
 

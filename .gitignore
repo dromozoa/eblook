@@ -16,6 +16,7 @@
 /configure
 /depcomp
 /eblook
+/eblook*.tar.gz
 /install-sh
 /libtool
 /ltmain.sh
