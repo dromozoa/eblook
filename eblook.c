@@ -500,12 +500,12 @@ static const char *short_options = "e:hp:qiv";
 static struct option long_options[] = {
   {"encoding",        required_argument, NULL, 'e'},
   {"help",            no_argument,       NULL, 'h'},
-#ifdef USE_DROMOZOA
-  {"prompt",          required_argument, NULL, 'p'},
-#endif
   {"no-init-file",    no_argument,       NULL, 'q'},
   {"non-interactive", no_argument,       NULL, 'i'},
   {"version",         no_argument,       NULL, 'v'},
+#ifdef USE_DROMOZOA
+  {"prompt",          required_argument, NULL, 'p'},
+#endif
   {NULL,              no_argument,       NULL, 0}
 };
 
@@ -3286,6 +3286,9 @@ show_help ()
   xfprintf (stderr, "  -i, --non-interactive enter non interactive mode\n");
   xfprintf (stderr, "  -h, --help            show this message\n");
   xfprintf (stderr, "  -v, --version         show version number\n");
+#ifdef USE_DROMOZOA
+  xfprintf (stderr, "  -p, --prompt=PROMPT   specify default prompt\n");
+#endif
   fflush (stderr);
 }
 
