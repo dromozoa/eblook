@@ -12,5 +12,6 @@ eblook_LDADD = @LIBOBJS@
 noinst_HEADERS = getopt.h codeconv.h
 
 EXTRA_DIST = README.org
+EXTRA_DIST += README.md dromozoa.h
 # MAINTAINERCLEANFILES = Makefile.in aclocal.m4 config.h.in stamp-h.in \
 #	configure missing mkinstalldirs install-sh texinfo.tex
