@@ -3263,6 +3263,9 @@ show_version ()
   xputs ("Copyright (C) 2000-2002 NEMOTO Takashi");
   xputs ("Copyright (C) 2000,2001 YAMAGATA");
   xputs ("Copyright (C) 2006-2022 Kazuhiro Ito");
+#ifdef USE_DROMOZOA
+  xputs("Copyright (C) 2024 Tomoyuki Fujimori");
+#endif
   xputs ("eblook may be distributed under the terms of the GNU General Public Licence;");
   xputs ("certain other uses are permitted as well.  For details, see the file");
   xputs ("`COPYING'.");
