@@ -330,6 +330,9 @@ struct command_table_t {
   const char *option_string;
   void (*func) (int, char *[]);
   const char *help;
+#ifdef USE_DROMOZOA
+  void (*func_ex) (int, char *[], void*);
+#endif
 };
 
 struct command_table_t *find_command ();
@@ -894,6 +897,11 @@ excute_command (command_line)
   /* otherwise, search command and execute */
   for (i = 0; command_table[i].name != NULL; i++) {
     if (strcmp (argv[0], command_table[i].name) == 0) {
+#ifdef USE_DROMOZOA
+      if (command_table[i].func_ex)
+        command_table[i].func_ex(argc, argv, command_table + i);
+      else
+#endif
       command_table[i].func (argc, argv);
       return 1;
     }

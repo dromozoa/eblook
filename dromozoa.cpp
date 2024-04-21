@@ -27,6 +27,8 @@
 
 #include <cstddef>
 #include <cstdio>
+#include <chrono>
+#include <iomanip>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
@@ -37,8 +39,9 @@ extern "C" {
   struct command_table_t {
     const char* name;
     const char* option_string;
-    void (*func) (int, char*[]);
+    void (*func)(int, char*[]);
     const char* help;
+    void (*func_ex)(int, char*[], void*);
   };
 
   int parse_entry_id(char*, EB_Position*);
@@ -152,14 +155,54 @@ namespace {
       std::cerr << e.what() << "\n";
     }
   }
+
+  bool timer;
+
+  // on|off
+  void command_timer(int argc, char* argv[]) {
+    try {
+      if (argc < 2) {
+        throw std::invalid_argument("wrong number of arguments");
+      }
+      std::string on_off = argv[1];
+      timer = on_off == "true" || on_off == "on";
+    } catch (const std::exception& e) {
+      std::cerr << e.what() << "\n";
+    }
+  }
+
+  static void func_ex(int argc, char* argv[], void* data) {
+    namespace chr = std::chrono;
+
+    const auto begin = chr::steady_clock::now();
+    static_cast<command_table_t*>(data)->func(argc, argv);
+    const auto end = chr::steady_clock::now();
+
+    if (timer) {
+      const auto duration = chr::duration_cast<chr::microseconds>(end - begin).count();
+      std::cerr << std::fixed << std::setprecision(6) << duration * 0.000001 << " sec\n";
+    }
+  }
 }
 
 struct command_table_t* dromozoa_command_table(struct command_table_t* source) {
   if (command_table.empty()) {
     for (auto* ptr = source; ptr->name; ++ptr) {
+      ptr->func_ex = func_ex;
       command_table.push_back(*ptr);
     }
-    command_table.push_back({ "png", "entry w h file", command_png, "dump mono image into file in PNG format.\n" });
+    command_table.push_back({
+      "png", "entry w h file",
+      command_png,
+      "dump mono image into file in PNG format.\n",
+      func_ex,
+    });
+    command_table.push_back({
+      "timer", "on|off",
+      command_timer,
+      "turn timer on or off.\n",
+      func_ex,
+    });
     command_table.push_back({ nullptr, nullptr, nullptr, nullptr });
   }
   return command_table.data();
